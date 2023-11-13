@@ -1,0 +1,123 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go - ML</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Go-themed color scheme */
+        body {
+            background-color: #00acd6;
+            color: #ffffff;
+        }
+
+        h1, h2, h3 {
+            color: #343a40;
+        }
+
+        /* Custom styling for the form */
+        form {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Styling for buttons */
+        button {
+            margin-right: 5px;
+        }
+
+        /* Styling for prediction result */
+        .prediction-result {
+            margin-top: 20px;
+        }
+    </style>
+    
+    <!-- Bootstrap JS and dependencies (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function addRow() {
+            var table = document.getElementById("data-table");
+            var newRow = table.insertRow(table.rows.length);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+
+            cell1.innerHTML = '<input type="text" class="form-control" name="x[]" required>';
+            cell2.innerHTML = '<input type="text" class="form-control" name="y[]" required>';
+        }
+
+        function removeRow() {
+            var table = document.getElementById("data-table");
+            if (table.rows.length > 1) {
+                table.deleteRow(table.rows.length - 1);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Regression with Go</h1>
+
+        <h2>Train the Model</h2>
+        <form action="/" method="post">
+            <table id="data-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>X</th>
+                        <th>Y</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="form-control" name="x[]" required></td>
+                        <td><input type="text" class="form-control" name="y[]" required></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
+            <button type="button" class="btn btn-danger" onclick="removeRow()">Remove Row</button>
+            <button type="submit" class="btn btn-success">Train</button>
+        </form>
+
+        {{if .TrainingData}}
+        <h3>Training Data:</h3>
+        <ul>
+            {{range .TrainingData}}
+            <li>{{.X}}, {{.Y}}</li>
+            {{end}}
+        </ul>
+        {{end}}
+
+        <hr>
+
+        <h2>Test the Model</h2>
+        <form action="/test" method="post">
+            <div class="form-group">
+                <label for="number">Enter a X value to test:</label>
+                <input type="text" class="form-control" id="number" name="number" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Test</button>
+        </form>
+
+        {{if .Number}}
+        <p class="prediction-result">{{.Number}}</p>
+        {{end}}
+    </div>
+</body>
+</html>
